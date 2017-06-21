@@ -112,16 +112,11 @@ mysql> DROP DATABASE lesson;
 #### JDBC链接本地MySQL数据库，创建表结构并添加数据和查询数据
 
 
+具体代码
 
-···java
 
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
-
-public class Main {
+```java
+public class Main{
 
     public static void main(String[] args) throws Exception {
         connectMySQLTest01();
