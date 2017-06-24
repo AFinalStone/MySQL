@@ -221,14 +221,9 @@ mysql>ALTER TABLE study_new RENAME TO study;
 
  SHOW COLUMNS FROM study或者DESCRIBE study
 
-
-
 - 插入数据
 
 mysql> insert into study (username,class,sex)VALUES('小王',1,'男'),('小四',2,'女');
-
-
-
 
 
 - 查询数据（使concat函数拼接数据）
@@ -250,8 +245,11 @@ mysql> DROP DATABASE lesson;
 
 #### JDBC链接本地MySQL数据库，创建表结构并添加数据和查询数据
 
+首先我们要下载JDBC的jar包，本项目中放在了lib目录中。
 
-具体代码
+然后添加一个Main,使用JDBC链接MySQL数据库，创建表结构并添加数据和查询数据
+
+具体代码：
 
 
 ```java
