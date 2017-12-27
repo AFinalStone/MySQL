@@ -142,16 +142,17 @@ service”，一般出现在以前有安装mysql的服务器上，解决的办�
 
 - 登陆mysql
 
+
 打cmd命令终端，如果已经添加了mysql的环境变量，可以直接使用命令
-
+```sql
 mysql -uroot -p
-
+```
 直接回车，之后按提示输入密码，
 
 如果未添加mysql的环境变量，可以切换到mysql的安装目录下的bin目录，再使用
-
+```sql
 mysq -uroot
-
+```
 你也可以手动为mysql添加环境变量。这里就不介绍怎么添加环境变量的方法了
 
 密码输入正确之后，就会出现“Welcome to the MySQL monitor.  Commands end with ; or \g. ......”字样，
@@ -161,88 +162,102 @@ mysq -uroot
 mysql的所有命令都以";"或者\g为结束符
 
 - 查看MySQL服务所在的端口号
-
+```sql
 show global variables like 'port';  
-
+```
 - 查看MySQL版本
-
+```sql
 status;  或者  show global variables like 'port';  
-
+```
 
 - 新建数据库
 
 在新建数据库之后，我们先设置一下字符集
-
-mysql>SET NAMES utf8;
-
+```sql
+SET NAMES utf8;
+```
 然后再创建数据库
-
-mysql>CREATE DATABASE lesson
-
+```sql
+CREATE DATABASE lesson
+```
 - 显示所有数据库
-
-mysql>SHOW DATABASES;
-
+```sql
+SHOW DATABASES;
+```
 - 使用数据库
- 
- mysql>USE 数据库名;
-
+```sql
+USE 数据库名;
+```
 - 新建表
-
-mysql>CREATE TABLE study(
-
-   id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '学生id号',
-
-   username varchar(30) NOT NULL DEFAULT '' COMMENT '学生名字',
-
-  class tinyint(3) unsigned NOT NULL,
-
-  sex enum('男','女','保密')  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '保密' COMMENT '性别',
-
-  addtime int(10) NOT NULL DEFAULT '0',
-
-   PRIMARY KEY (id)
-
-)ENGINE=InnoDB  COMMENT = '学生表';
-
+```sql
+CREATE TABLE study(
+id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '学生id号',
+username varchar(30) NOT NULL DEFAULT 'xiaoming' COMMENT '学生名字',
+class tinyint(3) unsigned NOT NULL,
+sex enum('男','女','保密') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '保密' COMMENT '性别',
+addtime int(10) NOT NULL DEFAULT '0',
+PRIMARY KEY (id)
+)ENGINE=InnoDB COMMENT = '学生表';
+```
 - 显示所有表
-
-mysql>SHOW TABLES;
-
+```sql
+SHOW TABLES;
+```
 - 修改表的名称 
-
-mysql>RENAME TABLE study TO study_new ;
-
+```sql
+RENAME TABLE study TO study_new ;
+```
 或者
-
-mysql>ALTER TABLE study_new RENAME TO study;
-
+```sql
+ALTER TABLE study_new RENAME TO study;
+```
 - 显示字段信息
-
+```sql
  SHOW COLUMNS FROM study或者DESCRIBE study
-
+```
 - 插入数据
-
-mysql> insert into study (username,class,sex)VALUES('小王',1,'男'),('小四',2,'女');
-
+```sql
+insert into study (username,class,sex)VALUES('小王',1,'男'),('小四',2,'女');
+```
 
 - 查询数据（使concat函数拼接数据）
-
-mysql> SELECT username,CONCAT(class,'班'),sex FROM study;
-
+```sql
+SELECT username,CONCAT(class,'班'),sex FROM study;
+```
 - 删除数据
-
-mysql>DELETE FROM study WHERE  id=1;
-
+```sql
+DELETE FROM study WHERE  id=1;
+```
 - 删除数据表
-
+```sql
 DROP TABLE study;
-
+```
 - 删除数据库
+```sql
+DROP DATABASE lesson;
 
-mysql> DROP DATABASE lesson;
+####Cmd命令行窗口中,MySQL表中数据乱码问题
 
+百度了一下。。有说将cmd字符编码用chcp命令改为65001（utf8字符编码），可这样之后根本无法输入中文，查询出的中问结果依旧乱码 
+其实，只要保证cmd客户端和MySQL两者编码一致即可。 
+但现实是cmd默认的是gbk（cmd属性可以看到中文操作系统下面是gbk编码），而mysql一般是utf8（我的也是），之前一直进入误区，想要更改cmd的字符编码，可是并不能行得通。网友中提到在mysql中关于客户端编码问题，只需在cmd里告诉mysql服务器我客户端这边编码和想要的结果集编码即可。
 
+具体步骤：
+1、win+r进入cmd，然后切到mysql安装目录的bin文件夹下（或者直接打开我的电脑找到bin文件夹，在上方地址栏输入cmd）；
+
+2、输入 mysql -uroot -p，然后按提示输入密码计入数据库；
+
+3、设置编码；
+
+>此时输入 set character_set_client=gbk;告诉我客户端这边的文字编码
+再输入set character_set_results=gbk; 告诉mysql希望返回的结果集编码；实验中发现只要客户端是gbk编码的，只要设置这个就可以解决乱码这个问题。
+
+还有另外一个好用的命令可以同时达到上面两条指令的效果：
+
+>set charset gbk;//和上面两个效果一致。
+
+大功告成！去插入中文字段试试吧！
+```
 #### JDBC链接本地MySQL数据库，创建表结构并添加数据和查询数据
 
 首先我们要下载JDBC的jar包，本项目中jar放在了lib目录中，大家可以直接使用我这个mysql-connector-java-5.1.42-bin.jar包。
@@ -378,28 +393,6 @@ public class Main{
 
 ```
 
-
-####Cmd命令行窗口中,MySQL表中数据乱码问题
-
-百度了一下。。有说将cmd字符编码用chcp命令改为65001（utf8字符编码），可这样之后根本无法输入中文，查询出的中问结果依旧乱码 
-其实，只要保证cmd客户端和MySQL两者编码一致即可。 
-但现实是cmd默认的是gbk（cmd属性可以看到中文操作系统下面是gbk编码），而mysql一般是utf8（我的也是），之前一直进入误区，想要更改cmd的字符编码，可是并不能行得通。网友中提到在mysql中关于客户端编码问题，只需在cmd里告诉mysql服务器我客户端这边编码和想要的结果集编码即可。
-
-具体步骤：
-1、win+r进入cmd，然后切到mysql安装目录的bin文件夹下（或者直接打开我的电脑找到bin文件夹，在上方地址栏输入cmd）；
-
-2、输入 mysql -uroot -p，然后按提示输入密码计入数据库；
-
-3、设置编码；
-
->此时输入 set character_set_client=gbk;告诉我客户端这边的文字编码
-再输入set character_set_results=gbk; 告诉mysql希望返回的结果集编码；实验中发现只要客户端是gbk编码的，只要设置这个就可以解决乱码这个问题。
-
-还有另外一个好用的命令可以同时达到上面两条指令的效果：
-
->set charset gbk;//和上面两个效果一致。
-
-大功告成！去插入中文字段试试吧！
 
 项目地址：[传送门](https://github.com/AFinalStone/MySQL)
 
